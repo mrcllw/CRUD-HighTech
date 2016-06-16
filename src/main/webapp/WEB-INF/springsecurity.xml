@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
+
+<security:http use-expressions="true" auto-config="true">
+	<security:csrf disabled="true"/>
+	<security:intercept-url pattern="/admin/*" access="isAuthenticated()"/>
+	<security:intercept-url pattern="/admin/*" access="hasAuthority('ADM')"/>
+	<security:intercept-url pattern="/login.xhtml" access="permitAll"/>
+	<security:form-login 
+		login-page="/login.xhtml" 
+		username-parameter="email" 
+		password-parameter="password"
+		authentication-failure-url="/login.xhtml"
+		default-target-url="/admin/index.xhtml"
+		login-processing-url="/j_spring_security_check"/>
+	<security:logout logout-url="/j_spring_security_logout" logout-success-url="/login.xhtml"/>
+</security:http>
+
+<security:authentication-manager>
+	<security:authentication-provider>
+		<security:jdbc-user-service 
+			data-source-ref="dataSourceDB" 
+			users-by-username-query="select email, password, active from usuario where email=?"
+			authorities-by-username-query="select u.email, p.descricao from usuario u, perfil p
+			where u.perfil_id = p.id and u.email=?"/>
+	</security:authentication-provider>
+</security:authentication-manager>
+</beans>

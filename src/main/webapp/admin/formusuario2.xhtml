@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<body>
+	<h:form>
+		<h:selectOneMenu value="#{usuarioController.usu.perfil}" converter="#{perfilConverter}">
+			Perfil:
+			<f:selectItem itemValue="" itemLabel="Selecione" noSelectionOption="true"></f:selectItem>
+			<f:selectItems value="#{perfilController.listaPerfil}" var="p" itemLabel="#{p.descricao}">
+			</f:selectItems>
+		</h:selectOneMenu>
+		
+		Email:
+		<h:inputText value="#{usuarioController.usu.email}"/>
+		Senha:
+		<h:inputText value="#{usuarioController.usu.password}"/>
+		
+		<h:commandButton value="Salvar" actionListener="#{usuarioController.salvar()}"/>
+	</h:form>
+	<h:messages/>
+	<h:form>
+		<h:dataTable border="1" value="#{usuarioController.listaUsu}" var="usu">
+			<f:facet name="header">Usuarios cadastrados:</f:facet>
+			<h:column>
+			<f:facet name="header">ID</f:facet>
+			#{usu.id}</h:column>
+			
+			<h:column>
+			<f:facet name="header">Email</f:facet>
+			#{usu.email}</h:column>
+			
+			<h:column>
+			<f:facet name="header">Senha</f:facet>
+			#{usu.password}</h:column>
+			
+			<h:column>
+			<f:facet name="header">Perfil</f:facet>
+			#{usu.perfil.descricao}</h:column>
+			
+			<h:column>
+			<h:commandButton value="Editar" actionListener="#{usuarioController.editar(usu)}"/>
+			<h:commandButton value="Excluir" actionListener="#{usuarioController.excluir(usu)}"/>
+			</h:column>
+			
+		</h:dataTable>
+	</h:form>
+</body>
+</html>

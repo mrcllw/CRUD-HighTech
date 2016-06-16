@@ -1,0 +1,59 @@
+<ui:composition template="template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="conteudo">
+		<h:form id="form-cadastro">
+			<p:panelGrid columns="2">
+				<p:outputLabel for="perfil" value="Perfil:"/>
+				<p:selectOneMenu id="perfil" value="#{usuarioController.usu.perfil}" converter="#{perfilConverter}">
+					<f:selectItem itemValue="" itemLabel="Selecione" noSelectionOption="true"/>
+					<f:selectItems value="#{perfilController.listaPerfil}" var="p" itemLabel="#{p.descricao}"/>
+				</p:selectOneMenu>
+				
+				<p:outputLabel for="email" value="Email:"/>
+				<p:inputText id="email" value="#{usuarioController.usu.email}" placeholder="Digite o Email"/>
+				
+				<p:outputLabel for="senha" value="Senha:"/>
+				<p:inputText id="senha" value="#{usuarioController.usu.password}"/>
+				
+				<f:facet name="footer">
+					<h:panelGroup style="display:block; text-align:center;">
+						<p:commandButton update=":#{p:component('listagem')}" value="Salvar" actionListener="#{usuarioController.salvar()}"/>
+						<p:commandButton update="form-cadastro" value="Cancelar" actionListener="#{usuarioController.cancelar()}"/>
+					</h:panelGroup>
+				</f:facet>
+			</p:panelGrid>
+		</h:form>
+		<h:messages/>
+		<h:form id="listagem">
+			<p:dataTable id="lista-usuario" border="1" value="#{usuarioController.listaUsu}" var="usu" style="margin-top:20px">
+				<f:facet name="header">Usuarios cadastrados:</f:facet>
+				<p:column>
+				<f:facet name="header">ID</f:facet>
+				#{usu.id}</p:column>
+				
+				<p:column>
+				<f:facet name="header">Email</f:facet>
+				#{usu.email}</p:column>
+				
+				<p:column>
+				<f:facet name="header">Senha</f:facet>
+				#{usu.password}</p:column>
+				
+				<p:column>
+				<f:facet name="header">Perfil</f:facet>
+				#{usu.perfil.descricao}</p:column>
+				
+				<p:column>
+				<p:commandButton icon="fa fa-pencil" update=":#{p:component('form-cadastro')}" process="@this" actionListener="#{usuarioController.editar(usu)}"/>
+				<p:commandButton icon="fa fa-trash-o" update=":#{p:component('listagem')}" process="@this" actionListener="#{usuarioController.excluir(usu)}"/>
+				</p:column>
+				
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+</ui:composition>
